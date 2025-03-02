@@ -1,19 +1,18 @@
+import os
+import pytesseract
 from flask import Flask, request, jsonify
 from flask_cors import CORS
-import pytesseract
 from PIL import Image
-import os
-import shutil
-
-# Tetapkan lokasi Tesseract
-pytesseract.pytesseract.tesseract_cmd = "/usr/bin/tesseract"
 
 app = Flask(__name__)
 CORS(app, resources={r"/*": {"origins": "*"}})
 
-# Pastikan Tesseract bisa ditemukan
-if shutil.which("tesseract") is None:
-    pytesseract.pytesseract.tesseract_cmd = "/usr/bin/tesseract"
+# Cek dan set path Tesseract secara manual
+tesseract_path = "/usr/bin/tesseract"
+if not os.path.exists(tesseract_path):
+    tesseract_path = "/usr/local/bin/tesseract"
+
+pytesseract.pytesseract.tesseract_cmd = tesseract_path
 
 @app.route('/')
 def home():
