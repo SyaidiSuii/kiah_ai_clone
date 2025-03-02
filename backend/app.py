@@ -5,6 +5,9 @@ from PIL import Image
 import os
 import shutil
 
+# Tetapkan lokasi Tesseract
+pytesseract.pytesseract.tesseract_cmd = "/usr/bin/tesseract"
+
 app = Flask(__name__)
 CORS(app, resources={r"/*": {"origins": "*"}})
 
