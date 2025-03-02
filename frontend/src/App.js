@@ -3,20 +3,26 @@ import axios from "axios";
 
 function App() {
   const [text, setText] = useState("");
+  const [error, setError] = useState("");
 
   const handleUpload = async (event) => {
     const file = event.target.files[0];
+    if (!file) return;
+
     const formData = new FormData();
     formData.append("image", file);
 
     try {
       const response = await axios.post(
-        "https://kiah-ai-clone.onrender.com//upload",
-        formData
+        "http://localhost:5000/upload", // Ganti dengan backend URL jika online
+        formData,
+        { headers: { "Content-Type": "multipart/form-data" } }
       );
       setText(response.data.extracted_text);
+      setError(""); // Reset error jika berhasil
     } catch (error) {
       console.error("Error uploading file", error);
+      setError("Failed to extract text. Please try again.");
     }
   };
 
@@ -27,8 +33,10 @@ function App() {
         type="file"
         onChange={handleUpload}
         className="mt-4 p-2 border border-gray-300 rounded"
+        accept="image/*"
       />
-      <p className="mt-4 text-lg">{text}</p>
+      {text && <p className="mt-4 text-lg text-gray-700">{text}</p>}
+      {error && <p className="mt-4 text-lg text-red-600">{error}</p>}
     </div>
   );
 }
