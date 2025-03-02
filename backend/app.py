@@ -7,12 +7,8 @@ from PIL import Image
 app = Flask(__name__)
 CORS(app, resources={r"/*": {"origins": "*"}})
 
-# Cek dan set path Tesseract secara manual
-tesseract_path = "/usr/bin/tesseract"
-if not os.path.exists(tesseract_path):
-    tesseract_path = "/usr/local/bin/tesseract"
-
-pytesseract.pytesseract.tesseract_cmd = tesseract_path
+# Set path Tesseract untuk Windows
+pytesseract.pytesseract.tesseract_cmd = r"C:\Program Files\Tesseract-OCR\tesseract.exe"  # Sesuaikan dengan lokasi instalasi Anda
 
 @app.route('/')
 def home():
