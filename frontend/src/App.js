@@ -11,7 +11,7 @@ function App() {
 
     try {
       const response = await axios.post(
-        "https://kiah-ai-backend.onrender.com/upload",
+        "https://kiah-ai-clone.onrender.com//upload",
         formData
       );
       setText(response.data.extracted_text);
