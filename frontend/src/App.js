@@ -14,7 +14,7 @@ function App() {
 
     try {
       const response = await axios.post(
-        "http://localhost:5000/upload", // Ganti dengan backend URL jika online
+        "https://kiah-ai-clone.onrender.com/upload", // Ganti dengan backend URL jika online
         formData,
         { headers: { "Content-Type": "multipart/form-data" } }
       );
