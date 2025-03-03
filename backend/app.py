@@ -13,9 +13,12 @@ CORS(app, resources={r"/*": {"origins": "*"}})
 if os.getenv("RENDER"):
     tesseract_path = "/usr/bin/tesseract"  # Path default di Linux
 else:
+# Cek lokasi Tesseract di Windows & Linux
     possible_paths = [
-        r"C:\Program Files\Tesseract-OCR\tesseract.exe",
-        r"C:\Program Files (x86)\Tesseract-OCR\tesseract.exe",
+    r"C:\Program Files\Tesseract-OCR\tesseract.exe",
+    r"C:\Program Files (x86)\Tesseract-OCR\tesseract.exe",
+    "/usr/bin/tesseract",
+    "/usr/local/bin/tesseract"
     ]
     tesseract_path = next((path for path in possible_paths if os.path.exists(path)), None)
 
