@@ -1,5 +1,6 @@
 import os
 import pytesseract
+import subprocess
 from flask import Flask, request, jsonify
 from flask_cors import CORS
 from PIL import Image
@@ -8,19 +9,27 @@ from werkzeug.utils import secure_filename
 app = Flask(__name__)
 CORS(app, resources={r"/*": {"origins": "*"}})
 
-# Cek lokasi Tesseract
-possible_paths = [
-    r"C:\Program Files\Tesseract-OCR\tesseract.exe",
-    r"C:\Program Files (x86)\Tesseract-OCR\tesseract.exe",
-]
-
-tesseract_path = next((path for path in possible_paths if os.path.exists(path)), None)
-
-if tesseract_path:
-    pytesseract.pytesseract.tesseract_cmd = tesseract_path
-    print(f"Tesseract ditemukan di: {tesseract_path}")
+# Cek apakah berjalan di Render
+if os.getenv("RENDER"):
+    tesseract_path = "/usr/bin/tesseract"  # Path default di Linux
 else:
-    print("⚠️ Tesseract tidak ditemukan!")
+    possible_paths = [
+        r"C:\Program Files\Tesseract-OCR\tesseract.exe",
+        r"C:\Program Files (x86)\Tesseract-OCR\tesseract.exe",
+    ]
+    tesseract_path = next((path for path in possible_paths if os.path.exists(path)), None)
+
+# Pastikan Tesseract bisa dipanggil
+try:
+    if tesseract_path:
+        pytesseract.pytesseract.tesseract_cmd = tesseract_path
+        test_output = subprocess.check_output([tesseract_path, "--version"], stderr=subprocess.STDOUT)
+        print(f"Tesseract ditemukan: {test_output.decode().strip()}")
+    else:
+        raise FileNotFoundError("Tesseract tidak ditemukan!")
+except Exception as e:
+    print(f"⚠️ Error: {e}")
+    tesseract_path = None
 
 @app.route('/')
 def home():
